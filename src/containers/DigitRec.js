@@ -3,12 +3,16 @@
  */
 
 import React from 'react';
+import Canvas from '../components/canvas'
 
 export default class DigitRec extends  React.Component {
 
     render() {
         return(
+            <div>
             <h1>DigitRec</h1>
+                <Canvas/>
+            </div>
         );
     }
 
