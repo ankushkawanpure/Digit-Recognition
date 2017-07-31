@@ -25,7 +25,7 @@ export default class Template extends  React.Component {
                         <AppBar position="static">
                             <Toolbar>
                                 <Typography type="title" color="inherit">
-                                    Handwritten Digit Recognition
+                                    Handwriting Recognition
                                 </Typography>
                             </Toolbar>
                         </AppBar>

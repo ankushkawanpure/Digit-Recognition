@@ -5,12 +5,23 @@
 import React from 'react';
 import Canvas from '../components/canvas'
 
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+
+
 export default class DigitRec extends  React.Component {
 
     render() {
         return(
             <div>
-            <h1>DigitRec</h1>
+                <AppBar position="static" color="default">
+                    <Toolbar>
+                        <Typography type="title" color="inherit">
+                            Digits Recognition
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
                 <Canvas/>
             </div>
         );
