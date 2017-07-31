@@ -7,6 +7,7 @@ import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 
+import ImageProcessor from '../util/ImageAnalyser';
 
 const styleSheet = createStyleSheet(theme => ({
     root: {
@@ -130,11 +131,26 @@ class Canvas extends Component {
     }
 
     onRecognize() {
+        let canvasCopy = document.createElement("canvas");
+        let canvasData = {
+            canvas: this.canvas,
+            canvasCopy: canvasCopy,
+            paths: this.paths
+        };
+
+        let imageProcessor = new ImageProcessor(canvasData);
+        let prediction = imageProcessor.analyseImage();
+        console.log(prediction);
+
+        this.setState({
+            pred:prediction
+        });
 
     }
 
     onClear() {
-
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.paths = [];
     }
 
 
