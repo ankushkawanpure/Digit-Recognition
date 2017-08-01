@@ -14,6 +14,12 @@ const styleSheet = createStyleSheet(theme => ({
         flexGrow: 1,
         marginTop: 30,
     },
+
+    grid: {
+        textAlign: 'center',
+        margin: 'auto'
+    },
+
     paper: {
         padding: 16,
         textAlign: 'center',
@@ -33,7 +39,7 @@ class Canvas extends Component {
         this.currY = 0;
         this.paths = []; // recording paths
         this.paintFlag = false;
-        this.lineWidth = 20; // this value cannot be small
+        this.lineWidth = 40; // this value cannot be small
 
 
         this.state = {
@@ -51,15 +57,22 @@ class Canvas extends Component {
         this.canvas.addEventListener("mousemove", function (e) {
             that.drawing('move', e);
         }, false);
+
         this.canvas.addEventListener("mousedown", function (e) {
+            that.onClear();
             that.drawing('down', e);
         }, false);
+
         this.canvas.addEventListener("mouseup", function (e) {
             that.drawing('up', e);
+            that.onRecognize();
         }, false);
+
         this.canvas.addEventListener("mouseout", function (e) {
             that.drawing('out', e);
         }, false);
+
+        this.result = this.refs.result;
     }
 
     drawing(res, e) {
@@ -163,46 +176,57 @@ class Canvas extends Component {
         };
 
         return (
-            <div className="container">
-                <div>
-                    <div>
-                        <Grid container gutter={24}>
-                            <Grid item xs={12}>
-                                <Paper className={classes.paper}>
-                                    <canvas id="canvas" ref="canvas" width={200} height={200} style={canvasStyle}></canvas>
-                                </Paper>
-                            </Grid>
+            <div className={classes.root}>
+                <Grid container gutter={8}>
 
-                            <Grid item xs={6}>
-                                <Paper className={classes.paper}>
-                                    <Button raised color="primary" className={classes.button} onClick={() => {this.onRecognize();}}>
-                                        Recognize
-                                    </Button>
-                                </Paper>
-                            </Grid>
+                    {/*<Grid item xs={12} sm={3}>*/}
+                        {/*<Paper className={classes.paper} style={{height:408}}>*/}
+                            {/*<canvas id="result" ref="result" width={200} height={200}></canvas>*/}
+                        {/*</Paper>*/}
+                    {/*</Grid>*/}
 
-                            <Grid item xs={6}>
-                                <Paper className={classes.paper}>
-                                    <Button raised color="primary" className={classes.button} onClick={() => {this.onClear();}}>
-                                        Clear
-                                    </Button>
-                                </Paper>
-                            </Grid>
+                    <Grid className={classes.grid} item xs={12} sm={9}>
+                        <Paper className={classes.paper}>
+                            <canvas id="canvas" ref="canvas" width={400} height={400} style={canvasStyle}></canvas>
+                        </Paper>
+                    </Grid>
 
 
-                            <Grid item xs={12}>
-                                <Paper className={classes.paper}>
-                                    <span id="result">{this.state.pred}</span>
-                                </Paper>
+                    {/*<Grid item xs={12} sm={3}>*/}
+                        {/*<Paper className={classes.paper}>*/}
+                            {/*Looks like: {this.state.pred}*/}
+                        {/*</Paper>*/}
+                    {/*</Grid>*/}
+                    <Grid className={classes.grid} item xs={12} sm={9}>
+                        <Paper className={classes.paper}>
+                            <Button raised color="primary" className={classes.button} onTouchTap={() => {this.onRecognize();}} style={{width: 200}}>
+                                Recognize
+                            </Button>
+                            <Button raised color="primary" className={classes.button} onTouchTap={() => {this.onClear();}} style={{width: 200}}>
+                                Clear
+                            </Button>
+                        </Paper>
+                    </Grid>
 
-                            </Grid>
+                    {/*<Grid item xs={12} sm={6}>*/}
+                        {/*<Paper className={classes.paper}>*/}
+                            {/*<Button raised color="primary" className={classes.button} onClick={() => {this.onClear();}} style={{width: 200}}>*/}
+                                {/*Clear*/}
+                            {/*</Button>*/}
+                        {/*</Paper>*/}
+                    {/*</Grid>*/}
 
-                        </Grid>
 
-                    </div>
-                </div>
+                    <Grid className={classes.grid} item xs={12}>
+                        <Paper className={classes.paper}>
+                            Looks like: {this.state.pred}
+                        </Paper>
+                    </Grid>
+
+                </Grid>
 
             </div>
+
         );
     }
 }

@@ -17,7 +17,7 @@ export default class ImageAnalyser {
         let canvas = this.canvas;
         let paths = this.paths;
         let ctx = this.canvas.getContext('2d');
-        let imgData = ctx.getImageData(0, 0, 200, 200);
+        let imgData = ctx.getImageData(0, 0, 400, 400);
         let grayImage = this.imageDataToGrayscale(imgData);
         const bounds = this.getBoundingRectangle(grayImage, 0.01);
         const center = this.getCenterOfImage(grayImage);
@@ -28,8 +28,8 @@ export default class ImageAnalyser {
         let copyCtx = canvasCopy.getContext("2d");
         const brW = bounds.maxX+1-bounds.minX;
         const brH = bounds.maxY+1-bounds.minY;
-        const scaling = 150 / (brW>brH?brW:brH);
-
+        const scaling = 300 / (brW>brH?brW:brH);
+        console.log('scaling ', scaling);
 
         // scale and change origin
         copyCtx.translate(canvas.width/2, canvas.height/2);
@@ -50,9 +50,9 @@ export default class ImageAnalyser {
             }
         }
 
-        // copyCtx.drawImage(ctx.canvas, 0, 0);
+        copyCtx.drawImage(ctx.canvas, 0, 0);
         // read new canvas image data
-        imgData = copyCtx.getImageData(0, 0, 200, 200);
+        imgData = copyCtx.getImageData(0, 0, 400, 400);
         const bwInvertImage = this.imageToInvertBW(imgData);
 
         // scale image from 200x200 to 20x20
@@ -60,13 +60,13 @@ export default class ImageAnalyser {
         for (let y = 0; y < 20; y++) {
             for (let x = 0; x < 20; x++) {
                 let mean = 0;
-                for (let v = 0; v < 10; v++) {
-                    for (let h = 0; h < 10; h++) {
-                        mean += bwInvertImage[y*10 + v][x*10 + h];
+                for (let v = 0; v < 20; v++) {
+                    for (let h = 0; h < 20; h++) {
+                        mean += bwInvertImage[y*20 + v][x*20 + h];
                     }
                 }
                 // avg of 10x10
-                mean = mean / 100;
+                mean = mean / 400;
                 // change color range from 0~1 to -1~1, BW to GW
                 nnInput[x*20+y] = (mean - .5) / .5;
                 if (nnInput[x*20+y] === -1) nnInput[x*20+y] = 0;
@@ -74,8 +74,11 @@ export default class ImageAnalyser {
         }
 
         // calculate the image RGB info and put it back on canvas
+        // console.log('canvas width', canvas.width);
+        // console.log('canvas height', canvas.height);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(copyCtx.canvas, 0, 0);
+
         for (let y = 0; y < 20; y++) {
             for (let x = 0; x < 20; x++) {
                 let block = ctx.getImageData(x * 10, y * 10, 10, 10);
@@ -239,6 +242,7 @@ export default class ImageAnalyser {
         }
 
         const max = Math.max(...units3);
+
         return units3.findIndex(function(element, index, array){
             console.log(element);
             return element === max;
